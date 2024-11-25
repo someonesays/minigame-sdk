@@ -1,0 +1,39 @@
+{
+  "name": "@someonesays/minigame-sdk",
+  "version": "0.0.1",
+  "private": false,
+  "author": "Someone Says",
+  "description": "Create your own Someone Says minigames!",
+  "main": "dist/index.cjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "unbuild",
+    "watch": "tsc --watch",
+    "format": "npx @biomejs/biome format --write ./",
+    "pub": "npm run format && npm run build && changeset version && changeset publish"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "homepage": "https://github.com/someonesays/minigame-sdk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/someonesays/minigame-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/someonesays/minigame-sdk/issues"
+  },
+  "files": ["/dist", "package.json"],
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.27.10",
+    "typescript": "^5.7.2",
+    "unbuild": "^2.0.0"
+  },
+  "dependencies": {
+    "eventemitter3": "^5.0.1"
+  }
+}
