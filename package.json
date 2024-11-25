@@ -4,6 +4,7 @@
   "private": false,
   "author": "Someone Says",
   "description": "Create your own Someone Says minigames!",
+  "license": "MIT",
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "scripts": {
