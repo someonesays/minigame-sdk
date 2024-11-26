@@ -1,9 +1,14 @@
 import EventEmitter from "eventemitter3";
-import { ParentOpcodes, MinigameOpcodes } from "../types";
-import type { ParentTypes, MinigameTypes } from "../types";
+import {
+  ParentOpcodes,
+  MinigameOpcodes,
+  type ParentTypes,
+  type MinigameTypes,
+} from "../types";
 
 export class MinigameSdk {
-  private isReady = false;
+  public data?: ParentTypes[ParentOpcodes.READY];
+
   private isWaiting = false;
   private isDestroyed = false;
 
@@ -33,16 +38,55 @@ export class MinigameSdk {
     if (this.source !== source) return;
 
     const [opcode, payload] = data;
-    switch (opcode) {
-      case ParentOpcodes.READY:
-        this.isReady = true;
-        this.isWaiting = false;
-        this.emitter.emit(ParentOpcodes.READY, payload);
-        break;
-      default:
-        this.emitter.emit(opcode, payload);
-        break;
+
+    if (this.data) {
+      switch (opcode) {
+        case ParentOpcodes.UPDATE_SETTINGS:
+          const { settings } =
+            payload as ParentTypes[ParentOpcodes.UPDATE_SETTINGS];
+          if (settings.language)
+            this.data.settings.language = settings.language;
+          if (typeof settings.volume === "number")
+            this.data.settings.volume = settings.volume;
+          break;
+        case ParentOpcodes.MINIGAME_PLAYER_READY:
+          this.data.players.push(
+            (payload as ParentTypes[ParentOpcodes.MINIGAME_PLAYER_READY])
+              .player,
+          );
+          break;
+        case ParentOpcodes.PLAYER_LEFT: {
+          const player = this.data.players.find(
+            (p) =>
+              p.id ===
+              (payload as ParentTypes[ParentOpcodes.MINIGAME_PLAYER_READY])
+                .player.id,
+          );
+          if (!player) break;
+
+          this.data.players.splice(this.data.players.indexOf(player), 1);
+          break;
+        }
+        case ParentOpcodes.UPDATED_GAME_STATE:
+          this.data.room.state =
+            payload as ParentTypes[ParentOpcodes.UPDATED_GAME_STATE];
+          break;
+        case ParentOpcodes.UPDATED_PLAYER_STATE:
+          const { user, state } =
+            payload as ParentTypes[ParentOpcodes.UPDATED_PLAYER_STATE];
+          const player = this.data.players.find((p) => p.id === user);
+          if (!player) break;
+
+          player.state = state;
+          break;
+      }
+    } else if (opcode === ParentOpcodes.READY) {
+      this.isWaiting = false;
+      this.data = payload as ParentTypes[ParentOpcodes.READY];
+      this.emitter.emit(ParentOpcodes.READY, payload);
     }
+
+    this.emitter.emit(opcode, payload);
   }
   private postMessage<O extends MinigameOpcodes>(
     opcode: O,
@@ -92,13 +136,12 @@ export class MinigameSdk {
    * Sends a handshake to the parent to start listening to events.
    * @returns The ready payload
    */
-  ready(): Promise<ParentTypes[ParentOpcodes.READY]> {
-    if (this.isReady || this.isWaiting)
+  ready() {
+    if (this.data || this.isWaiting)
       throw new Error("Already ready or requested to be ready");
 
     this.isWaiting = true;
     this.postMessage(MinigameOpcodes.HANDSHAKE, {});
-    return new Promise((resolve) => this.once(ParentOpcodes.READY, resolve));
   }
   /**
    * End the game and assign the winner, second place, third place and anyone else who should earn points for participation.
