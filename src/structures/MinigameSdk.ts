@@ -1,4 +1,5 @@
 import EventEmitter from "eventemitter3";
+import { BaseMinigameSdk } from "../structures";
 import {
   ParentOpcodes,
   MinigameOpcodes,
@@ -6,7 +7,7 @@ import {
   type MinigameTypes,
 } from "../types";
 
-export class MinigameSdk {
+export class MinigameSdk implements BaseMinigameSdk {
   public data?: ParentTypes[ParentOpcodes.READY];
 
   private isWaiting = false;
