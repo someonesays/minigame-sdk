@@ -14,6 +14,24 @@ import { MinigameSdk, ParentOpcodes } from "@someonesays/minigame-sdk";
 // Initiate the MinigameSDK
 const sdk = new MinigameSdk();
 
+// Initiate the TestingMinigameSDK
+const sdk = new TestingMinigameSdk({
+  minigameId: "insert your minigame id here",
+  testingAccessCode: "insert your testing access code here",
+  playersToStart: 2,
+});
+
+// Initiate the TestingMinigameSDK with more advanced settings
+const sdk = new TestingMinigameSdk({
+  minigameId: "insert your minigame id here",
+  testingAccessCode: "insert your testing access code here",
+  playersToStart: 2,
+  opcode: "Oppack", // Either "Oppack" or "Json"
+  displayName: "insert your display name here",
+  volume: 100, // Value between 0-100
+  debug: true, // Whether or not to send console debug logs
+});
+
 // When your minigame finishes loading and wants to start recieving events, run this event
 const minigame = await sdk.ready();
 

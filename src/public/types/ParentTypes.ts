@@ -4,7 +4,7 @@ import type {
   MinigamePlayer,
   ParentOpcodes,
   State,
-} from "../types";
+} from "../../";
 
 export interface ParentTypes {
   [ParentOpcodes.READY]: {

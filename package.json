@@ -1,6 +1,6 @@
 {
   "name": "@someonesays/minigame-sdk",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": false,
   "author": "Someone Says",
   "description": "Create your own Someone Says minigames!",
@@ -35,6 +35,7 @@
     "unbuild": "^2.0.0"
   },
   "dependencies": {
+    "@msgpack/msgpack": "3.0.0-beta2",
     "eventemitter3": "^5.0.1"
   }
 }

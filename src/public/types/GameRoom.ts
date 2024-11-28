@@ -1,4 +1,4 @@
-import type { State } from "../types";
+import type { State } from "../../";
 
 /** The room data */
 export interface GameRoom {

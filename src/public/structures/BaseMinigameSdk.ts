@@ -1,10 +1,6 @@
 import EventEmitter from "eventemitter3";
-import {
-  ParentOpcodes,
-  MinigameOpcodes,
-  type ParentTypes,
-  type MinigameTypes,
-} from "../types";
+import { ParentOpcodes, MinigameOpcodes } from "../../";
+import type { ParentTypes, MinigameTypes } from "../../";
 
 export interface BaseMinigameSdk {
   data?: ParentTypes[ParentOpcodes.READY];

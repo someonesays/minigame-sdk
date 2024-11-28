@@ -1,4 +1,4 @@
-import type { GamePrizes, MinigameOpcodes, State } from "../types";
+import type { GamePrizes, MinigameOpcodes, State } from "../../";
 
 export interface MinigameTypes {
   [MinigameOpcodes.HANDSHAKE]: {};

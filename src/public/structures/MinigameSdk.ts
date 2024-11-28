@@ -1,11 +1,6 @@
 import EventEmitter from "eventemitter3";
-import { BaseMinigameSdk } from "../structures";
-import {
-  ParentOpcodes,
-  MinigameOpcodes,
-  type ParentTypes,
-  type MinigameTypes,
-} from "../types";
+import { BaseMinigameSdk, ParentOpcodes, MinigameOpcodes } from "../..";
+import type { ParentTypes, MinigameTypes } from "../..";
 
 export class MinigameSdk implements BaseMinigameSdk {
   public data?: ParentTypes[ParentOpcodes.READY];
@@ -35,7 +30,7 @@ export class MinigameSdk implements BaseMinigameSdk {
   private handleMessage<O extends ParentOpcodes>({
     source,
     data,
-  }: { source: MessageEvent["source"] } & { data: [O, ParentTypes[O]] }) {
+  }: { source: MessageEvent["source"]; data: [O, ParentTypes[O]] }) {
     if (this.source !== source) return;
 
     const [opcode, payload] = data;
@@ -84,7 +79,6 @@ export class MinigameSdk implements BaseMinigameSdk {
     } else if (opcode === ParentOpcodes.READY) {
       this.isWaiting = false;
       this.data = payload as ParentTypes[ParentOpcodes.READY];
-      this.emitter.emit(ParentOpcodes.READY, payload);
     }
 
     this.emitter.emit(opcode, payload);
@@ -138,8 +132,9 @@ export class MinigameSdk implements BaseMinigameSdk {
    * @returns The ready payload
    */
   ready() {
-    if (this.data || this.isWaiting)
+    if (this.data || this.isWaiting) {
       throw new Error("Already ready or requested to be ready");
+    }
 
     this.isWaiting = true;
     this.postMessage(MinigameOpcodes.HANDSHAKE, {});
