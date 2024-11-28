@@ -5,9 +5,6 @@ export interface MinigameTypes {
   [MinigameOpcodes.END_GAME]: {
     prizes: GamePrizes;
   };
-  [MinigameOpcodes.SET_CLIENT_PROMPT]: {
-    prompt: string;
-  };
   [MinigameOpcodes.SET_GAME_STATE]: {
     state: State;
   };

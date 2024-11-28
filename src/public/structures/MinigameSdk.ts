@@ -151,13 +151,6 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.END_GAME, payload);
   }
   /**
-   * Set the client prompt (client-side only).
-   * @param payload The prompt to set
-   */
-  setClientPrompt(payload: MinigameTypes[MinigameOpcodes.SET_CLIENT_PROMPT]) {
-    this.postMessage(MinigameOpcodes.SET_CLIENT_PROMPT, payload);
-  }
-  /**
    * Set the game state (host-only).
    * @param payload The state to set
    */

@@ -413,14 +413,6 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Set the client prompt (client-side only).
-   * @param payload The prompt to set
-   */
-  setClientPrompt(payload: MinigameTypes[MinigameOpcodes.SET_CLIENT_PROMPT]) {
-    if (!this.debug) return;
-    this.log("Changed the client prompt to:", payload.prompt);
-  }
-  /**
    * Set the game state (host-only).
    * @param payload The state to set
    */

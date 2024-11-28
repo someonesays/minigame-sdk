@@ -68,9 +68,6 @@ sdk.endGame({
   ],
 });
 
-// Send the client prompt (client-sided)
-sdk.setClientPrompt({ prompt: "**Someone says** [your prompt here]" });
-
 // Set the game state (host-only)
 sdk.setGameState({ state });
 

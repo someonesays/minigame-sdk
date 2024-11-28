@@ -20,9 +20,6 @@ export interface BaseMinigameSdk {
 
   ready(): void;
   endGame(payload: MinigameTypes[MinigameOpcodes.END_GAME]): void;
-  setClientPrompt(
-    payload: MinigameTypes[MinigameOpcodes.SET_CLIENT_PROMPT],
-  ): void;
   setGameState(payload: MinigameTypes[MinigameOpcodes.SET_GAME_STATE]): void;
   setPlayerState(
     payload: MinigameTypes[MinigameOpcodes.SET_PLAYER_STATE],
