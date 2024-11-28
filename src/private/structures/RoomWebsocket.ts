@@ -29,30 +29,23 @@ export class RoomWebsocket {
     testingAccessCode: string;
     baseUrl: string;
   }): Promise<MatchmakingResponse> {
-    try {
-      const res = await fetch(`${baseUrl}/api/matchmaking/testing`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          type: MatchmakingType.TESTING,
-          displayName,
-          minigameId,
-          testingAccessCode,
-        }),
-      });
-      const data = await res.json();
-      if (res.status !== 200) {
-        throw new Error(
-          "Failed to create matchmaking server. Are you sure you put in the correct minigame ID and testing access code?",
-        );
-      }
-      return data;
-    } catch (err) {
-      console.error(err);
+    const res = await fetch(`${baseUrl}/api/matchmaking/testing`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        type: MatchmakingType.TESTING,
+        displayName,
+        minigameId,
+        testingAccessCode,
+      }),
+    });
+    const data = await res.json();
+    if (res.status !== 200) {
       throw new Error(
-        "Failed to fetch to the API! Are you connected to the internet?",
+        "Failed to create matchmaking server. Are you sure you put in the correct minigame ID and testing access code?",
       );
     }
+    return data;
   }
 
   static async parseMessage({

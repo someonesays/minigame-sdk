@@ -12,7 +12,7 @@ import type {
 
 export interface ServerTypes {
   [ServerOpcodes.PING]: {};
-  [ServerOpcodes.ERROR]: { message: string };
+  [ServerOpcodes.ERROR]: { code: string };
   [ServerOpcodes.GET_INFORMATION]: {
     status: GameStatus;
     user: string;

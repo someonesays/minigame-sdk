@@ -1,4 +1,5 @@
 export type * from "./types/ApiErrorResponse";
+export * from "./types/ErrorMessageCodes";
 
 export * from "./types/ClientOpcodes";
 export * from "./types/ServerOpcodes";

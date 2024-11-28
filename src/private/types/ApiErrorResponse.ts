@@ -1,3 +1,5 @@
+import type { ErrorMessageCodes } from "../../";
+
 export interface ApiErrorResponse {
-  code: string;
+  code: ErrorMessageCodes;
 }

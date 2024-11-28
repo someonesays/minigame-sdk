@@ -9,6 +9,7 @@ import {
   ServerOpcodes,
   RoomWebsocket,
   GameStatus,
+  ErrorMessageCodesToText,
 } from "../..";
 import type { ApiErrorResponse, ServerTypes } from "../../";
 import { generateCode } from "../../private/utils/generateCode";
@@ -141,7 +142,10 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
       });
 
       this.ws.on(ServerOpcodes.ERROR, (evt) => {
-        this.logError(evt.message);
+        this.logError(
+          "An error has been given from the server:",
+          ErrorMessageCodesToText[evt.code] ?? evt.code,
+        );
       });
 
       this.ws.once(ServerOpcodes.GET_INFORMATION, (evt) => {
@@ -328,8 +332,14 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
       this.ws.onclose = (evt) => {
         try {
           const { code } = JSON.parse(evt.reason) as ApiErrorResponse;
-          if (connected) return this.logError("Disconnected!", code);
-          return reject(`Failed to connect to server: ${code}`);
+          if (connected)
+            return this.logError(
+              "Disconnected!",
+              ErrorMessageCodesToText[code] ?? code,
+            );
+          return reject(
+            `Failed to connect to server: ${ErrorMessageCodesToText[code] ?? code}`,
+          );
         } catch (err) {
           if (connected) {
             return this.logError("Disconnected! (no reason provided)");
