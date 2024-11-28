@@ -47,22 +47,19 @@ sdk.endGame({
   ],
 });
 sdk.endGame({
-  // The users to earn winner, second place, third place and participation points
+  // The users to earn winner (3 points), second place (2 points) and third place (1 point)
+  // There can be multiple winners, second place and third place players.
   prizes: [
     {
       user: "user_id",
-      type: GamePrizeType.PARTICIPATION,
-    },
-    {
-      user: "user_id2",
       type: GamePrizeType.WINNER,
     },
     {
-      user: "user_id3",
+      user: "user_id2",
       type: GamePrizeType.SECOND,
     },
       {
-      user: "user_id4",
+      user: "user_id3",
       type: GamePrizeType.THIRD,
     },
   ],

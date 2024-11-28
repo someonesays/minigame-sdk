@@ -1,10 +1,8 @@
 /** These are the different types of prizes the minigame can give when a minigame ends */
 export enum GamePrizeType {
-  /** Send 1 point for participation */
-  PARTICIPATION = 0,
-  /** Give 5 points to the winner */
+  /** Give 1 points to the winner */
   WINNER = 1,
-  /** Give 4 points to second place */
+  /** Give 2 points to second place */
   SECOND = 2,
   /** Give 3 points to third place */
   THIRD = 3,
