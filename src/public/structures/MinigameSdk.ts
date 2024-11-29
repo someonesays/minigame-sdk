@@ -54,9 +54,7 @@ export class MinigameSdk implements BaseMinigameSdk {
         case ParentOpcodes.PLAYER_LEFT: {
           const player = this.data.players.find(
             (p) =>
-              p.id ===
-              (payload as ParentTypes[ParentOpcodes.MINIGAME_PLAYER_READY])
-                .player.id,
+              p.id === (payload as ParentTypes[ParentOpcodes.PLAYER_LEFT]).user,
           );
           if (!player) break;
 
