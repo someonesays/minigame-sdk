@@ -5,5 +5,6 @@ export interface MinigamePlayer {
   id: string;
   displayName: string;
   avatar: string;
+  mobile: boolean;
   state: State;
 }
