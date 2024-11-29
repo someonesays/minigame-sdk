@@ -25,7 +25,7 @@ const sdk = new TestingMinigameSdk({
 const sdk = new TestingMinigameSdk({
   minigameId: "insert your minigame id here",
   testingAccessCode: "insert your testing access code here",
-  playersToStart: 2,
+  playersToStart: 2, // (reminder: make sure to change this value on your minigame settings when publishing your minigame!)
   opcode: "Oppack", // Either "Oppack" or "Json"
   displayName: "insert your display name here",
   volume: 100, // Value between 0-100
