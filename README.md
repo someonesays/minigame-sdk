@@ -29,7 +29,6 @@ const sdk = new TestingMinigameSdk({
   opcode: "Oppack", // Either "Oppack" or "Json"
   displayName: "insert your display name here",
   volume: 100, // Value between 0-100
-  debug: true, // Whether or not to send console debug logs
 });
 
 // When your minigame finishes loading and wants to start recieving events, run this event

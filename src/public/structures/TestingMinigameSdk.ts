@@ -22,7 +22,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
 
   private emitter = new EventEmitter<ParentOpcodes>();
 
-  private baseUrl = "http://localhost:3001" as const;
+  private baseUrl = "http://localhost" as const;
   private ws?: RoomWebsocket;
 
   private minigameId: string;
@@ -31,7 +31,6 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   private opcode: "Json" | "Oppack";
   private displayName: string;
   private volume: number;
-  private debug: boolean;
 
   /**
    * Create the TestingMinigameSDK for Someone Says.
@@ -43,7 +42,6 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     opcode = "Oppack",
     displayName,
     volume = 100,
-    debug = true,
   }: {
     minigameId: string;
     testingAccessCode: string;
@@ -51,7 +49,6 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     opcode?: "Json" | "Oppack";
     displayName?: string;
     volume?: number;
-    debug?: boolean;
   }) {
     this.minigameId = minigameId;
     this.testingAccessCode = testingAccessCode;
@@ -59,7 +56,6 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     this.displayName = displayName ?? `Guest_${generateCode()}`;
     this.opcode = opcode;
     this.volume = volume;
-    this.debug = debug;
   }
   private handleMessage<O extends ParentOpcodes>({
     data,
