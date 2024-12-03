@@ -28,7 +28,10 @@ export interface ServerTypes {
     pack: Pack | null;
     minigame: Minigame | null;
   };
-  [ServerOpcodes.LOAD_MINIGAME]: { players: GamePlayer[] };
+  [ServerOpcodes.LOAD_MINIGAME]: {
+    players: GamePlayer[];
+    roomHandshakeCount: number;
+  };
   [ServerOpcodes.END_MINIGAME]:
     | {
         players: GamePlayer[];

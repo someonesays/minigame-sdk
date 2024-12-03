@@ -6,7 +6,7 @@ export interface ClientTypes {
   [ClientOpcodes.TRANSFER_HOST]: { user: string };
   [ClientOpcodes.SET_ROOM_SETTINGS]: { packId: string; minigameId: string };
   [ClientOpcodes.BEGIN_GAME]: {};
-  [ClientOpcodes.MINIGAME_HANDSHAKE]: {};
+  [ClientOpcodes.MINIGAME_HANDSHAKE]: { roomHandshakeCount?: number };
   [ClientOpcodes.MINIGAME_END_GAME]: { prizes?: GamePrizes };
   [ClientOpcodes.MINIGAME_SET_GAME_STATE]: { state: State };
   [ClientOpcodes.MINIGAME_SET_PLAYER_STATE]: { user: string; state: State };
