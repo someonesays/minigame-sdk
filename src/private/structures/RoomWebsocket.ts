@@ -101,7 +101,6 @@ export class RoomWebsocket {
         messageType,
         payload,
       });
-
       return this.emit(opcode, data);
     };
 

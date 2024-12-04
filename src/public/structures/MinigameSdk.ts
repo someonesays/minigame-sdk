@@ -166,7 +166,7 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.SEND_GAME_MESSAGE, payload);
   }
   /**
-   * Send a player message (host-only).
+   * Send a player message.
    * @param payload The message to send
    */
   sendPlayerMessage(
@@ -184,6 +184,35 @@ export class MinigameSdk implements BaseMinigameSdk {
     payload: MinigameTypes[MinigameOpcodes.SEND_PRIVATE_MESSAGE],
   ) {
     this.postMessage(MinigameOpcodes.SEND_PRIVATE_MESSAGE, payload);
+  }
+  /**
+   * Send a binary game message (host-only).
+   * @param payload The message to send
+   */
+  sendBinaryGameMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_GAME_MESSAGE],
+  ) {
+    this.postMessage(MinigameOpcodes.SEND_BINARY_GAME_MESSAGE, payload);
+  }
+  /**
+   * Send a player message.
+   * @param payload The message to send
+   */
+  sendBinaryPlayerMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_PLAYER_MESSAGE],
+  ) {
+    this.postMessage(MinigameOpcodes.SEND_BINARY_PLAYER_MESSAGE, payload);
+  }
+  /**
+   * Send a private message to a player.
+   *
+   * Anyone can send messages to the host but only the host can send messages to other players.
+   * @param payload The message to send
+   */
+  sendBinaryPrivateMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_PRIVATE_MESSAGE],
+  ) {
+    this.postMessage(MinigameOpcodes.SEND_BINARY_PRIVATE_MESSAGE, payload);
   }
 
   /**

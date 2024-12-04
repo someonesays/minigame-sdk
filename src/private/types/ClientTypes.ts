@@ -16,6 +16,12 @@ export interface ClientTypes {
     user?: string;
     message: State;
   };
+  [ClientOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE]: Uint8Array;
+  [ClientOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE]: Uint8Array;
+  [ClientOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE]: {
+    user?: string;
+    message: Uint8Array;
+  };
 }
 
 export interface ClientOpcodeAndData<O extends ClientOpcodes> {
@@ -35,4 +41,7 @@ export type ClientOpcodeAndDatas =
   | ClientOpcodeAndData<ClientOpcodes.MINIGAME_SET_PLAYER_STATE>
   | ClientOpcodeAndData<ClientOpcodes.MINIGAME_SEND_GAME_MESSAGE>
   | ClientOpcodeAndData<ClientOpcodes.MINIGAME_SEND_PLAYER_MESSAGE>
-  | ClientOpcodeAndData<ClientOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE>;
+  | ClientOpcodeAndData<ClientOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE>
+  | ClientOpcodeAndData<ClientOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE>
+  | ClientOpcodeAndData<ClientOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE>
+  | ClientOpcodeAndData<ClientOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE>;

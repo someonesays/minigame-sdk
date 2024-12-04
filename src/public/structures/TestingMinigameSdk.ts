@@ -327,6 +327,24 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
           data: [ParentOpcodes.RECEIVED_PRIVATE_MESSAGE, evt],
         });
       });
+      this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE, (evt) => {
+        if (!minigameReady) return;
+        this.handleMessage({
+          data: [ParentOpcodes.RECEIVED_BINARY_GAME_MESSAGE, evt],
+        });
+      });
+      this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE, (evt) => {
+        if (!minigameReady) return;
+        this.handleMessage({
+          data: [ParentOpcodes.RECEIVED_BINARY_PLAYER_MESSAGE, evt],
+        });
+      });
+      this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE, (evt) => {
+        if (!minigameReady) return;
+        this.handleMessage({
+          data: [ParentOpcodes.RECEIVED_BINARY_PRIVATE_MESSAGE, evt],
+        });
+      });
 
       this.ws.onclose = (evt) => {
         try {
@@ -460,6 +478,44 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   ) {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE,
+      data: payload,
+    });
+  }
+  /**
+   * Send a binary game message (host-only).
+   * @param payload The message to send
+   */
+  sendBinaryGameMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_GAME_MESSAGE],
+  ) {
+    this.ws?.send({
+      opcode: ClientOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE,
+      data: payload,
+    });
+  }
+  /**
+   * Send a player message.
+   * @param payload The message to send
+   */
+  sendBinaryPlayerMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_PLAYER_MESSAGE],
+  ) {
+    this.ws?.send({
+      opcode: ClientOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE,
+      data: payload,
+    });
+  }
+  /**
+   * Send a private message to a player.
+   *
+   * Anyone can send messages to the host but only the host can send messages to other players.
+   * @param payload The message to send
+   */
+  sendBinaryPrivateMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_PRIVATE_MESSAGE],
+  ) {
+    this.ws?.send({
+      opcode: ClientOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE,
       data: payload,
     });
   }

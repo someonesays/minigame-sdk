@@ -59,6 +59,16 @@ export interface ServerTypes {
     toUser: string;
     message: State;
   };
+  [ServerOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE]: Uint8Array;
+  [ServerOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE]: {
+    user: string;
+    message: Uint8Array;
+  };
+  [ServerOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE]: {
+    fromUser: string;
+    toUser: string;
+    message: Uint8Array;
+  };
 }
 
 export interface ServerOpcodeAndData<O extends ServerOpcodes> {

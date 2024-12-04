@@ -33,5 +33,15 @@ export interface BaseMinigameSdk {
   sendPrivateMessage(
     payload: MinigameTypes[MinigameOpcodes.SEND_PRIVATE_MESSAGE],
   ): void;
+  sendBinaryGameMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_GAME_MESSAGE],
+  ): void;
+  sendBinaryPlayerMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_PLAYER_MESSAGE],
+  ): void;
+  sendBinaryPrivateMessage(
+    payload: MinigameTypes[MinigameOpcodes.SEND_BINARY_PRIVATE_MESSAGE],
+  ): void;
+
   destroy(): void;
 }
