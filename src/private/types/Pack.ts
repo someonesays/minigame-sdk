@@ -8,4 +8,5 @@ export interface Pack {
   author: { id: string; name: string; createdAt: string };
   iconImage: { normal: string; discord: string } | null;
   createdAt: string;
+  updatedAt: string;
 }
