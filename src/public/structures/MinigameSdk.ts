@@ -138,11 +138,10 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.HANDSHAKE, {});
   }
   /**
-   * End the game and assign the winner (3 points), second place (2 points), third place (1 point) who should earn points
-   * @param payload The prizes to give
+   * End the minigame
    */
-  endGame(payload: MinigameTypes[MinigameOpcodes.END_GAME]) {
-    this.postMessage(MinigameOpcodes.END_GAME, payload);
+  endGame() {
+    this.postMessage(MinigameOpcodes.END_GAME, {});
   }
   /**
    * Set the game state (host-only).

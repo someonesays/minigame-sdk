@@ -1,8 +1,8 @@
-import type { GamePrizes, MinigameOpcodes, State } from "../../";
+import type { MinigameOpcodes, State } from "../../";
 
 export interface MinigameTypes {
   [MinigameOpcodes.HANDSHAKE]: {};
-  [MinigameOpcodes.END_GAME]: { prizes: GamePrizes };
+  [MinigameOpcodes.END_GAME]: {};
   [MinigameOpcodes.SET_GAME_STATE]: { state: State };
   [MinigameOpcodes.SET_PLAYER_STATE]: { user: string; state: State };
   [MinigameOpcodes.SEND_GAME_MESSAGE]: { message: State };

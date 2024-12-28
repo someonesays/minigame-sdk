@@ -416,13 +416,12 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     this.connect();
   }
   /**
-   * End the game and assign the winner (3 points), second place (2 points), third place (1 point) who should earn points
-   * @param payload The prizes to give
+   * End the minigame
    */
-  endGame(payload: MinigameTypes[MinigameOpcodes.END_GAME]) {
+  endGame() {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_END_GAME,
-      data: payload,
+      data: { force: false },
     });
   }
   /**

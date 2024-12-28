@@ -19,7 +19,7 @@ export interface BaseMinigameSdk {
   ): EventEmitter<ParentOpcodes, any>;
 
   ready(): void;
-  endGame(payload: MinigameTypes[MinigameOpcodes.END_GAME]): void;
+  endGame(): void;
   setGameState(payload: MinigameTypes[MinigameOpcodes.SET_GAME_STATE]): void;
   setPlayerState(
     payload: MinigameTypes[MinigameOpcodes.SET_PLAYER_STATE],

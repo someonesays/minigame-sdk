@@ -35,34 +35,7 @@ const sdk = new TestingMinigameSdk({
 const minigame = await sdk.ready();
 
 // End the game (host-only)
-sdk.endGame({ prizes: [] }); // No winners
-sdk.endGame({
-  // 1 winner
-  prizes: [
-    {
-      user: "user_id",
-      type: GamePrizeType.WINNER,
-    },
-  ],
-});
-sdk.endGame({
-  // The users to earn winner (3 points), second place (2 points) and third place (1 point)
-  // There can be multiple winners, second place and third place players.
-  prizes: [
-    {
-      user: "user_id",
-      type: GamePrizeType.WINNER,
-    },
-    {
-      user: "user_id2",
-      type: GamePrizeType.SECOND,
-    },
-      {
-      user: "user_id3",
-      type: GamePrizeType.THIRD,
-    },
-  ],
-});
+sdk.endGame();
 
 // Set the game state (host-only)
 sdk.setGameState({ state });

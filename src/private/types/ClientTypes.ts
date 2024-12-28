@@ -1,9 +1,4 @@
-import {
-  ClientOpcodes,
-  GamePrizes,
-  GameSelectPreviousOrNextMinigame,
-  State,
-} from "../../";
+import { ClientOpcodes, GameSelectPreviousOrNextMinigame, State } from "../../";
 
 export interface ClientTypes {
   [ClientOpcodes.PING]: {};
@@ -15,7 +10,7 @@ export interface ClientTypes {
   };
   [ClientOpcodes.BEGIN_GAME]: {};
   [ClientOpcodes.MINIGAME_HANDSHAKE]: { roomHandshakeCount?: number };
-  [ClientOpcodes.MINIGAME_END_GAME]: { prizes?: GamePrizes };
+  [ClientOpcodes.MINIGAME_END_GAME]: { force: boolean };
   [ClientOpcodes.MINIGAME_SET_GAME_STATE]: { state: State };
   [ClientOpcodes.MINIGAME_SET_PLAYER_STATE]: { user: string; state: State };
   [ClientOpcodes.MINIGAME_SEND_GAME_MESSAGE]: { message: State };

@@ -1,6 +1,6 @@
 {
   "name": "@someonesays/minigame-sdk",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "private": false,
   "author": "Someone Says",
   "description": "Create your own Someone Says minigames!",
@@ -32,7 +32,7 @@
     "@biomejs/biome": "^1.9.4",
     "@changesets/cli": "^2.27.11",
     "typescript": "^5.7.2",
-    "unbuild": "^2.0.0"
+    "unbuild": "^3.1.0"
   },
   "dependencies": {
     "@msgpack/msgpack": "^3.0.0-beta2",
