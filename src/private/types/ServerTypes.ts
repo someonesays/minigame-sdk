@@ -6,7 +6,6 @@ import type {
   GameStatus,
   Minigame,
   State,
-  Pack,
 } from "../../";
 
 export interface ServerTypes {
@@ -16,17 +15,13 @@ export interface ServerTypes {
     status: GameStatus;
     user: string;
     room: GameRoomPrivate;
-    pack: Pack | null;
     minigame: Minigame | null;
     players: GamePlayer[];
   };
   [ServerOpcodes.PLAYER_JOIN]: { player: GamePlayer };
   [ServerOpcodes.PLAYER_LEFT]: { user: string };
   [ServerOpcodes.TRANSFER_HOST]: { user: string };
-  [ServerOpcodes.UPDATED_ROOM_SETTINGS]: {
-    pack: Pack | null;
-    minigame: Minigame | null;
-  };
+  [ServerOpcodes.UPDATED_ROOM_SETTINGS]: { minigame: Minigame | null };
   [ServerOpcodes.LOAD_MINIGAME]: {
     players: GamePlayer[];
     roomHandshakeCount: number;

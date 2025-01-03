@@ -5,7 +5,6 @@ export interface Minigame {
   name: string;
   description: string;
   publishType: MinigamePublishType;
-  publicallyAddableToPack: boolean;
   author: { id: string; name: string; createdAt: string };
   previewImage: { normal: string; discord: string } | null;
   proxies: { normal: string; discord: string } | null;

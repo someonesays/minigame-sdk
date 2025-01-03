@@ -180,7 +180,6 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
           throw new Error("Cannot find room on updated room settings event");
 
         room.minigame = evt.minigame;
-        room.pack = evt.pack;
       });
 
       this.ws.on(ServerOpcodes.LOAD_MINIGAME, (evt) => {

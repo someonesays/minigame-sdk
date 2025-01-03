@@ -1,13 +1,10 @@
-import { ClientOpcodes, GameSelectPreviousOrNextMinigame, State } from "../../";
+import { ClientOpcodes, State } from "../../";
 
 export interface ClientTypes {
   [ClientOpcodes.PING]: {};
   [ClientOpcodes.KICK_PLAYER]: { user: string };
   [ClientOpcodes.TRANSFER_HOST]: { user: string };
-  [ClientOpcodes.SET_ROOM_SETTINGS]: { packId: string; minigameId: string };
-  [ClientOpcodes.SELECT_PREVIOUS_OR_NEXT_MINIGAME]: {
-    direction: GameSelectPreviousOrNextMinigame;
-  };
+  [ClientOpcodes.SET_ROOM_SETTINGS]: { minigameId: string | null };
   [ClientOpcodes.BEGIN_GAME]: {};
   [ClientOpcodes.MINIGAME_HANDSHAKE]: { roomHandshakeCount?: number };
   [ClientOpcodes.MINIGAME_END_GAME]: { force: boolean };
@@ -37,7 +34,6 @@ export type ClientOpcodeAndDatas =
   | ClientOpcodeAndData<ClientOpcodes.KICK_PLAYER>
   | ClientOpcodeAndData<ClientOpcodes.TRANSFER_HOST>
   | ClientOpcodeAndData<ClientOpcodes.SET_ROOM_SETTINGS>
-  | ClientOpcodeAndData<ClientOpcodes.SELECT_PREVIOUS_OR_NEXT_MINIGAME>
   | ClientOpcodeAndData<ClientOpcodes.BEGIN_GAME>
   | ClientOpcodeAndData<ClientOpcodes.MINIGAME_HANDSHAKE>
   | ClientOpcodeAndData<ClientOpcodes.MINIGAME_END_GAME>
