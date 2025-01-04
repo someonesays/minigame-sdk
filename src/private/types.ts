@@ -10,7 +10,6 @@ export type * from "./types/ServerTypes";
 export type * from "./types/GamePlayer";
 export type * from "./types/GameRoom";
 export * from "./types/GameStatus";
-export * from "./types/GameSelectPreviousOrNextMinigame";
 
 export type * from "./types/Matchmaking";
 export * from "./types/MatchmakingType";
