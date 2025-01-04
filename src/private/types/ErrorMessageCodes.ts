@@ -52,7 +52,7 @@ export const ErrorMessageCodesToText = {
   [ErrorMessageCodes.INVALID_CONTENT_TYPE]: "Invalid Content-Type.",
 
   [ErrorMessageCodes.REACHED_MINIGAME_LIMIT]:
-    "You have reached the minigames limit! (1000)",
+    "You have reached the minigames limit! (100)",
 
   [ErrorMessageCodes.MISSING_LOCATION]: "Missing location.",
   [ErrorMessageCodes.ROOM_NOT_FOUND]: "The room could not be found.",
