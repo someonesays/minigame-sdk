@@ -185,11 +185,11 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
         room.minigame = minigame;
       });
 
-      this.ws.on(ServerOpcodes.LOAD_MINIGAME, (evt) => {
+      this.ws.on(ServerOpcodes.LOAD_MINIGAME, ({ players }) => {
         if (!room) throw new Error("Cannot find room on load minigame");
 
         room.status = GameStatus.WAITING_PLAYERS_TO_LOAD_MINIGAME;
-        room.players = evt.players;
+        room.players = players;
 
         if (room.user !== room.room.host || this.playersToStart <= 1) {
           this.ws.send({
@@ -198,18 +198,18 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
           });
         }
       });
-      this.ws.on(ServerOpcodes.END_MINIGAME, (evt) => {
+      this.ws.on(ServerOpcodes.END_MINIGAME, ({ players, reason }) => {
         if (!room) throw new Error("Cannot find room on end minigame");
 
         room.status = GameStatus.LOBBY;
         room.room.state = null;
-        room.players = evt.players;
+        room.players = players;
 
         minigameReady = false;
 
         this.log(
           "The game has ended! Reload the host client to restart the room.",
-          evt,
+          { players, reason },
         );
       });
       this.ws.on(ServerOpcodes.MINIGAME_PLAYER_READY, (user) => {
@@ -344,10 +344,10 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
           });
         },
       );
-      this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE, (evt) => {
+      this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE, (message) => {
         if (!minigameReady) return;
         this.handleMessage({
-          data: [ParentOpcodes.RECEIVED_BINARY_GAME_MESSAGE, evt],
+          data: [ParentOpcodes.RECEIVED_BINARY_GAME_MESSAGE, message],
         });
       });
       this.ws.on(
@@ -457,10 +457,10 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
    * Set the game state (host-only).
    * @param payload The state to set
    */
-  setGameState(payload: MinigameTypes[MinigameOpcodes.SET_GAME_STATE]) {
+  setGameState({ state }: MinigameTypes[MinigameOpcodes.SET_GAME_STATE]) {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_SET_GAME_STATE,
-      data: payload,
+      data: state,
     });
   }
   /**
@@ -470,7 +470,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   setPlayerState(payload: MinigameTypes[MinigameOpcodes.SET_PLAYER_STATE]) {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_SET_PLAYER_STATE,
-      data: payload,
+      data: [payload.user, payload.state],
     });
   }
   /**
@@ -487,12 +487,12 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
    * Send a player message (host-only).
    * @param payload The message to send
    */
-  sendPlayerMessage(
-    payload: MinigameTypes[MinigameOpcodes.SEND_PLAYER_MESSAGE],
-  ) {
+  sendPlayerMessage({
+    message,
+  }: MinigameTypes[MinigameOpcodes.SEND_PLAYER_MESSAGE]) {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_SEND_PLAYER_MESSAGE,
-      data: payload,
+      data: message,
     });
   }
   /**

@@ -9,7 +9,7 @@ export interface ClientTypes {
   [ClientOpcodes.MINIGAME_HANDSHAKE]?: number;
   [ClientOpcodes.MINIGAME_END_GAME]: boolean;
   [ClientOpcodes.MINIGAME_SET_GAME_STATE]: State;
-  [ClientOpcodes.MINIGAME_SET_PLAYER_STATE]: { user: number; state: State };
+  [ClientOpcodes.MINIGAME_SET_PLAYER_STATE]: [number, State];
   [ClientOpcodes.MINIGAME_SEND_GAME_MESSAGE]: State;
   [ClientOpcodes.MINIGAME_SEND_PLAYER_MESSAGE]: State;
   [ClientOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE]: [
