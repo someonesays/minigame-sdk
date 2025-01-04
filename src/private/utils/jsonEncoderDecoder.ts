@@ -27,10 +27,7 @@ export function encodeJsonClient<O extends ClientOpcodes>(payload: {
       payload.data as ClientTypes[ClientOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE];
     return JSON.stringify({
       opcode: payload.opcode,
-      data: {
-        user: data.user,
-        message: toHexString(data.message),
-      },
+      data: [toHexString(data[0]), data[1]],
     });
   }
 
@@ -46,33 +43,25 @@ export function decodeJsonServer(payload: { opcode: number; data: unknown }) {
   }
 
   if (payload.opcode === ServerOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE) {
-    const data = payload.data as { user: string; message: string };
+    const data = payload.data as [number, string];
     return {
       opcode: payload.opcode,
-      data: {
-        user: data.user,
-        message: new Uint8Array(
-          Buffer.from(data.message as string, "hex").buffer,
-        ),
-      },
+      data: [
+        data[0],
+        new Uint8Array(Buffer.from(data[1] as string, "hex").buffer),
+      ],
     } as ServerOpcodeAndData<ServerOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE>;
   }
 
   if (payload.opcode === ServerOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE) {
-    const data = payload.data as {
-      fromUser: string;
-      toUser: string;
-      message: string;
-    };
+    const data = payload.data as [number, number, string];
     return {
       opcode: payload.opcode,
-      data: {
-        fromUser: data.fromUser,
-        toUser: data.toUser,
-        message: new Uint8Array(
-          Buffer.from(data.message as string, "hex").buffer,
-        ),
-      },
+      data: [
+        data[0],
+        data[1],
+        new Uint8Array(Buffer.from(data[2] as string, "hex").buffer),
+      ],
     } as ServerOpcodeAndData<ServerOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE>;
   }
 

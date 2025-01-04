@@ -2,26 +2,26 @@ import { ClientOpcodes, State } from "../../";
 
 export interface ClientTypes {
   [ClientOpcodes.PING]: {};
-  [ClientOpcodes.KICK_PLAYER]: { user: string };
-  [ClientOpcodes.TRANSFER_HOST]: { user: string };
-  [ClientOpcodes.SET_ROOM_SETTINGS]: { minigameId: string | null };
-  [ClientOpcodes.BEGIN_GAME]: {};
-  [ClientOpcodes.MINIGAME_HANDSHAKE]: { roomHandshakeCount?: number };
-  [ClientOpcodes.MINIGAME_END_GAME]: { force: boolean };
-  [ClientOpcodes.MINIGAME_SET_GAME_STATE]: { state: State };
-  [ClientOpcodes.MINIGAME_SET_PLAYER_STATE]: { user: string; state: State };
-  [ClientOpcodes.MINIGAME_SEND_GAME_MESSAGE]: { message: State };
-  [ClientOpcodes.MINIGAME_SEND_PLAYER_MESSAGE]: { message: State };
-  [ClientOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE]: {
-    user?: string;
-    message: State;
-  };
+  [ClientOpcodes.KICK_PLAYER]: number;
+  [ClientOpcodes.TRANSFER_HOST]: number;
+  [ClientOpcodes.SET_ROOM_SETTINGS]?: string | null;
+  [ClientOpcodes.BEGIN_GAME]?: null;
+  [ClientOpcodes.MINIGAME_HANDSHAKE]?: number;
+  [ClientOpcodes.MINIGAME_END_GAME]: boolean;
+  [ClientOpcodes.MINIGAME_SET_GAME_STATE]: State;
+  [ClientOpcodes.MINIGAME_SET_PLAYER_STATE]: { user: number; state: State };
+  [ClientOpcodes.MINIGAME_SEND_GAME_MESSAGE]: State;
+  [ClientOpcodes.MINIGAME_SEND_PLAYER_MESSAGE]: State;
+  [ClientOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE]: [
+    State,
+    number | null | undefined,
+  ];
   [ClientOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE]: Uint8Array;
   [ClientOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE]: Uint8Array;
-  [ClientOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE]: {
-    user?: string;
-    message: Uint8Array;
-  };
+  [ClientOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE]: [
+    Uint8Array,
+    number | null | undefined,
+  ];
 }
 
 export interface ClientOpcodeAndData<O extends ClientOpcodes> {

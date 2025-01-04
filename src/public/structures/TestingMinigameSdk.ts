@@ -138,10 +138,10 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
         messageType: this.opcode,
       });
 
-      this.ws.on(ServerOpcodes.ERROR, (evt) => {
+      this.ws.on(ServerOpcodes.ERROR, (code) => {
         this.logError(
           "An error has been given from the server:",
-          ErrorMessageCodesToText[evt.code] ?? evt.code,
+          ErrorMessageCodesToText[code] ?? code,
         );
       });
 
@@ -152,34 +152,37 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
         resolve(true);
 
         if (room.user === room.room.host) {
-          this.ws.send({ opcode: ClientOpcodes.BEGIN_GAME, data: {} });
+          this.ws.send({ opcode: ClientOpcodes.BEGIN_GAME, data: null });
         } else if (room.status !== GameStatus.LOBBY) {
-          this.ws.send({ opcode: ClientOpcodes.MINIGAME_HANDSHAKE, data: {} });
+          this.ws.send({
+            opcode: ClientOpcodes.MINIGAME_HANDSHAKE,
+            data: null,
+          });
         }
       });
-      this.ws.on(ServerOpcodes.PLAYER_JOIN, (evt) => {
-        room?.players.push(evt.player);
+      this.ws.on(ServerOpcodes.PLAYER_JOIN, (player) => {
+        room?.players.push(player);
       });
-      this.ws.on(ServerOpcodes.PLAYER_LEFT, (evt) => {
-        const player = room?.players.find((p) => p.id === evt.user);
+      this.ws.on(ServerOpcodes.PLAYER_LEFT, (user) => {
+        const player = room?.players.find((p) => p.id === user);
         if (!player) return;
 
         if (minigameReady) {
-          this.handleMessage({ data: [ParentOpcodes.PLAYER_LEFT, evt] });
+          this.handleMessage({ data: [ParentOpcodes.PLAYER_LEFT, { user }] });
         }
 
         room?.players.splice(room?.players.indexOf(player), 1);
       });
-      this.ws.on(ServerOpcodes.TRANSFER_HOST, (evt) => {
+      this.ws.on(ServerOpcodes.TRANSFER_HOST, (user) => {
         if (!room) throw new Error("Cannot find room on transfer host event");
 
-        room.room.host = evt.user;
+        room.room.host = user;
       });
-      this.ws.on(ServerOpcodes.UPDATED_ROOM_SETTINGS, (evt) => {
+      this.ws.on(ServerOpcodes.UPDATED_ROOM_SETTINGS, ({ minigame }) => {
         if (!room)
           throw new Error("Cannot find room on updated room settings event");
 
-        room.minigame = evt.minigame;
+        room.minigame = minigame;
       });
 
       this.ws.on(ServerOpcodes.LOAD_MINIGAME, (evt) => {
@@ -189,7 +192,10 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
         room.players = evt.players;
 
         if (room.user !== room.room.host || this.playersToStart <= 1) {
-          this.ws.send({ opcode: ClientOpcodes.MINIGAME_HANDSHAKE, data: {} });
+          this.ws.send({
+            opcode: ClientOpcodes.MINIGAME_HANDSHAKE,
+            data: null,
+          });
         }
       });
       this.ws.on(ServerOpcodes.END_MINIGAME, (evt) => {
@@ -206,10 +212,10 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
           evt,
         );
       });
-      this.ws.on(ServerOpcodes.MINIGAME_PLAYER_READY, (evt) => {
+      this.ws.on(ServerOpcodes.MINIGAME_PLAYER_READY, (user) => {
         if (!room) throw new Error("Cannot find room on end minigame");
 
-        const player = room.players.find((p) => p.id === evt.user);
+        const player = room.players.find((p) => p.id === user);
         if (!player) throw new Error("Cannot find the player who readied up");
 
         player.ready = true;
@@ -271,7 +277,10 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
           !room.players.find((p) => p.id === room.user)?.ready &&
           room.players.filter((p) => p.ready).length + 1 >= this.playersToStart
         ) {
-          this.ws.send({ opcode: ClientOpcodes.MINIGAME_HANDSHAKE, data: {} });
+          this.ws.send({
+            opcode: ClientOpcodes.MINIGAME_HANDSHAKE,
+            data: null,
+          });
         }
       });
       this.ws.on(ServerOpcodes.MINIGAME_START_GAME, () => {
@@ -284,66 +293,87 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
           data: [ParentOpcodes.START_GAME, { joinedLate: false }],
         });
       });
-      this.ws.on(ServerOpcodes.MINIGAME_SET_GAME_STATE, (evt) => {
+      this.ws.on(ServerOpcodes.MINIGAME_SET_GAME_STATE, (state) => {
         if (!room) throw new Error("Cannot find room on start minigame");
 
-        room.room.state = evt.state;
+        room.room.state = state;
 
         if (!minigameReady) return;
         this.handleMessage({
-          data: [ParentOpcodes.UPDATED_GAME_STATE, evt],
+          data: [ParentOpcodes.UPDATED_GAME_STATE, { state }],
         });
       });
-      this.ws.on(ServerOpcodes.MINIGAME_SET_PLAYER_STATE, (evt) => {
+      this.ws.on(ServerOpcodes.MINIGAME_SET_PLAYER_STATE, ([user, state]) => {
         if (!room) throw new Error("Cannot find room on start minigame");
 
-        const player = room.players.find((p) => p.id === evt.user);
+        const player = room.players.find((p) => p.id === user);
         if (!player)
           throw new Error("Cannot find the player who set player state");
 
-        player.state = evt.state;
+        player.state = state;
 
         if (!minigameReady) return;
         this.handleMessage({
-          data: [ParentOpcodes.UPDATED_PLAYER_STATE, evt],
+          data: [ParentOpcodes.UPDATED_PLAYER_STATE, { user, state }],
         });
       });
-      this.ws.on(ServerOpcodes.MINIGAME_SEND_GAME_MESSAGE, (evt) => {
+      this.ws.on(ServerOpcodes.MINIGAME_SEND_GAME_MESSAGE, (message) => {
         if (!minigameReady) return;
         this.handleMessage({
-          data: [ParentOpcodes.RECEIVED_GAME_MESSAGE, evt],
+          data: [ParentOpcodes.RECEIVED_GAME_MESSAGE, { message }],
         });
       });
-      this.ws.on(ServerOpcodes.MINIGAME_SEND_PLAYER_MESSAGE, (evt) => {
-        if (!minigameReady) return;
-        this.handleMessage({
-          data: [ParentOpcodes.RECEIVED_PLAYER_MESSAGE, evt],
-        });
-      });
-      this.ws.on(ServerOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE, (evt) => {
-        if (!minigameReady) return;
-        this.handleMessage({
-          data: [ParentOpcodes.RECEIVED_PRIVATE_MESSAGE, evt],
-        });
-      });
+      this.ws.on(
+        ServerOpcodes.MINIGAME_SEND_PLAYER_MESSAGE,
+        ([user, message]) => {
+          if (!minigameReady) return;
+          this.handleMessage({
+            data: [ParentOpcodes.RECEIVED_PLAYER_MESSAGE, { user, message }],
+          });
+        },
+      );
+      this.ws.on(
+        ServerOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE,
+        ([fromUser, toUser, message]) => {
+          if (!minigameReady) return;
+          this.handleMessage({
+            data: [
+              ParentOpcodes.RECEIVED_PRIVATE_MESSAGE,
+              { fromUser, toUser, message },
+            ],
+          });
+        },
+      );
       this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE, (evt) => {
         if (!minigameReady) return;
         this.handleMessage({
           data: [ParentOpcodes.RECEIVED_BINARY_GAME_MESSAGE, evt],
         });
       });
-      this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE, (evt) => {
-        if (!minigameReady) return;
-        this.handleMessage({
-          data: [ParentOpcodes.RECEIVED_BINARY_PLAYER_MESSAGE, evt],
-        });
-      });
-      this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE, (evt) => {
-        if (!minigameReady) return;
-        this.handleMessage({
-          data: [ParentOpcodes.RECEIVED_BINARY_PRIVATE_MESSAGE, evt],
-        });
-      });
+      this.ws.on(
+        ServerOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE,
+        ([user, message]) => {
+          if (!minigameReady) return;
+          this.handleMessage({
+            data: [
+              ParentOpcodes.RECEIVED_BINARY_PLAYER_MESSAGE,
+              { user, message },
+            ],
+          });
+        },
+      );
+      this.ws.on(
+        ServerOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE,
+        ([fromUser, toUser, message]) => {
+          if (!minigameReady) return;
+          this.handleMessage({
+            data: [
+              ParentOpcodes.RECEIVED_BINARY_PRIVATE_MESSAGE,
+              { fromUser, toUser, message },
+            ],
+          });
+        },
+      );
 
       this.ws.onclose = (evt) => {
         try {
@@ -420,7 +450,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   endGame() {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_END_GAME,
-      data: { force: false },
+      data: false,
     });
   }
   /**
@@ -476,7 +506,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   ) {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE,
-      data: payload,
+      data: [payload.message, payload.user],
     });
   }
   /**
@@ -514,7 +544,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   ) {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE,
-      data: payload,
+      data: [payload.message, payload.user],
     });
   }
 
