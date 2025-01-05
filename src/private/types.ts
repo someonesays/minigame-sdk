@@ -15,6 +15,5 @@ export type * from "./types/Matchmaking";
 export * from "./types/MatchmakingType";
 
 export type * from "./types/Minigame";
-export * from "./types/MinigamePublishType";
 export * from "./types/MinigameEndReason";
 export * from "./types/MinigameOrientation";

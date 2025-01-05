@@ -10,6 +10,11 @@ export enum ErrorMessageCodes {
   INVALID_CONTENT_TYPE = "invalid_content_type",
 
   REACHED_MINIGAME_LIMIT = "reached_minigame_limit",
+  ALREADY_CAN_PUBLISH = "already_can_publish",
+  MISSING_LEGAL_REVIEW = "missing_legal_review",
+  MISSING_LEGAL_PUBLISH = "missing_legal_publish",
+  MISSING_PROXY_URL_REVIEW = "missing_proxy_url_review",
+  MISSING_PROXY_URL_PUBLISH = "missing_proxy_url_publish",
 
   MISSING_LOCATION = "missing_location",
   ROOM_NOT_FOUND = "room_not_found",
@@ -23,6 +28,7 @@ export enum ErrorMessageCodes {
   TESTING_ENDED = "testing_ended",
 
   WS_DISABLED_IN_TESTING_ROOM = "ws_disabled_in_testing_room",
+  WS_DISABLED_IN_DISCORD_ROOM = "ws_disabled_in_discord_room",
   WS_NOT_HOST = "ws_not_host",
   WS_DISABLED_DURING_GAME = "ws_disabled_during_game",
   WS_CANNOT_KICK_SELF = "ws_cannot_kick_self",
@@ -53,6 +59,16 @@ export const ErrorMessageCodesToText = {
 
   [ErrorMessageCodes.REACHED_MINIGAME_LIMIT]:
     "You have reached the minigames limit! (100)",
+  [ErrorMessageCodes.ALREADY_CAN_PUBLISH]:
+    "You can already publish this minigame.",
+  [ErrorMessageCodes.MISSING_LEGAL_REVIEW]:
+    "Must have a terms of services and privacy policy to request to publish a minigame.",
+  [ErrorMessageCodes.MISSING_LEGAL_PUBLISH]:
+    "Cannot have an empty terms of services and/or privacy policy field.",
+  [ErrorMessageCodes.MISSING_PROXY_URL_REVIEW]:
+    "Must have a proxy url to request to publish a minigame.",
+  [ErrorMessageCodes.MISSING_PROXY_URL_PUBLISH]:
+    "Cannot have a empty proxy url on a published minigame.",
 
   [ErrorMessageCodes.MISSING_LOCATION]: "Missing location.",
   [ErrorMessageCodes.ROOM_NOT_FOUND]: "The room could not be found.",
@@ -71,6 +87,8 @@ export const ErrorMessageCodesToText = {
 
   [ErrorMessageCodes.WS_DISABLED_IN_TESTING_ROOM]:
     "Cannot use disabled opcode in testing room.",
+  [ErrorMessageCodes.WS_DISABLED_IN_DISCORD_ROOM]:
+    "Cannot use disabled opcode in the Discord activity.",
   [ErrorMessageCodes.WS_NOT_HOST]: "Only the host can run this action!",
   [ErrorMessageCodes.WS_DISABLED_DURING_GAME]:
     "Cannot run this action during a game.",
