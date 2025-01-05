@@ -4,7 +4,7 @@ export interface ClientTypes {
   [ClientOpcodes.PING]: {};
   [ClientOpcodes.KICK_PLAYER]: number;
   [ClientOpcodes.TRANSFER_HOST]: number;
-  [ClientOpcodes.SET_ROOM_SETTINGS]?: string | null;
+  [ClientOpcodes.SET_ROOM_SETTINGS]?: { minigameId: string | null };
   [ClientOpcodes.BEGIN_GAME]?: null;
   [ClientOpcodes.MINIGAME_HANDSHAKE]?: number;
   [ClientOpcodes.MINIGAME_END_GAME]: boolean;
