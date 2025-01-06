@@ -1,5 +1,7 @@
 import EventEmitter from "eventemitter3";
 import {
+  getSize,
+  getIndexedDB,
   BaseMinigameSdk,
   MinigameOpcodes,
   MinigameTypes,
@@ -31,6 +33,9 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   private opcode: "Json" | "Oppack";
   private displayName: string;
   private volume: number;
+
+  private db: Awaited<ReturnType<typeof getIndexedDB>>;
+  private minigameReady = false;
 
   /**
    * Create the TestingMinigameSDK for Someone Says.
@@ -130,7 +135,6 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
 
       let connected = false;
       let room: ServerTypes[ServerOpcodes.GET_INFORMATION] | null = null;
-      let minigameReady = false;
 
       this.ws = new RoomWebsocket({
         url: matchmaking.data.room.server.url,
@@ -167,7 +171,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
         const player = room?.players.find((p) => p.id === user);
         if (!player) return;
 
-        if (minigameReady) {
+        if (this.minigameReady) {
           this.handleMessage({ data: [ParentOpcodes.PLAYER_LEFT, { user }] });
         }
 
@@ -205,14 +209,14 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
         room.room.state = null;
         room.players = players;
 
-        minigameReady = false;
+        this.minigameReady = false;
 
         this.log(
           "The game has ended! Reload the host client to restart the room.",
           { players, reason },
         );
       });
-      this.ws.on(ServerOpcodes.MINIGAME_PLAYER_READY, (user) => {
+      this.ws.on(ServerOpcodes.MINIGAME_PLAYER_READY, async (user) => {
         if (!room) throw new Error("Cannot find room on end minigame");
 
         const player = room.players.find((p) => p.id === user);
@@ -221,6 +225,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
         player.ready = true;
 
         if (room.user === player.id) {
+          this.db = await getIndexedDB();
           this.handleMessage({
             data: [
               ParentOpcodes.READY,
@@ -234,6 +239,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
                   host: room.room.host,
                   state: room.room.state,
                 },
+                data: await this.db.get(room.minigame.id),
                 players: room.players
                   .filter((p) => p.ready)
                   .map((p) => ({
@@ -253,7 +259,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
             });
           }
 
-          minigameReady = true;
+          this.minigameReady = true;
         } else {
           this.handleMessage({
             data: [
@@ -288,7 +294,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
 
         room.status = GameStatus.STARTED;
 
-        if (!minigameReady) return;
+        if (!this.minigameReady) return;
         this.handleMessage({
           data: [ParentOpcodes.START_GAME, { joinedLate: false }],
         });
@@ -298,7 +304,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
 
         room.room.state = state;
 
-        if (!minigameReady) return;
+        if (!this.minigameReady) return;
         this.handleMessage({
           data: [ParentOpcodes.UPDATED_GAME_STATE, { state }],
         });
@@ -312,13 +318,13 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
 
         player.state = state;
 
-        if (!minigameReady) return;
+        if (!this.minigameReady) return;
         this.handleMessage({
           data: [ParentOpcodes.UPDATED_PLAYER_STATE, { user, state }],
         });
       });
       this.ws.on(ServerOpcodes.MINIGAME_SEND_GAME_MESSAGE, (message) => {
-        if (!minigameReady) return;
+        if (!this.minigameReady) return;
         this.handleMessage({
           data: [ParentOpcodes.RECEIVED_GAME_MESSAGE, { message }],
         });
@@ -326,7 +332,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
       this.ws.on(
         ServerOpcodes.MINIGAME_SEND_PLAYER_MESSAGE,
         ([user, message]) => {
-          if (!minigameReady) return;
+          if (!this.minigameReady) return;
           this.handleMessage({
             data: [ParentOpcodes.RECEIVED_PLAYER_MESSAGE, { user, message }],
           });
@@ -335,7 +341,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
       this.ws.on(
         ServerOpcodes.MINIGAME_SEND_PRIVATE_MESSAGE,
         ([fromUser, toUser, message]) => {
-          if (!minigameReady) return;
+          if (!this.minigameReady) return;
           this.handleMessage({
             data: [
               ParentOpcodes.RECEIVED_PRIVATE_MESSAGE,
@@ -345,7 +351,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
         },
       );
       this.ws.on(ServerOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE, (message) => {
-        if (!minigameReady) return;
+        if (!this.minigameReady) return;
         this.handleMessage({
           data: [ParentOpcodes.RECEIVED_BINARY_GAME_MESSAGE, message],
         });
@@ -353,7 +359,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
       this.ws.on(
         ServerOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE,
         ([user, message]) => {
-          if (!minigameReady) return;
+          if (!this.minigameReady) return;
           this.handleMessage({
             data: [
               ParentOpcodes.RECEIVED_BINARY_PLAYER_MESSAGE,
@@ -365,7 +371,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
       this.ws.on(
         ServerOpcodes.MINIGAME_SEND_BINARY_PRIVATE_MESSAGE,
         ([fromUser, toUser, message]) => {
-          if (!minigameReady) return;
+          if (!this.minigameReady) return;
           this.handleMessage({
             data: [
               ParentOpcodes.RECEIVED_BINARY_PRIVATE_MESSAGE,
@@ -454,6 +460,26 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
+   * Save local data store for the minigame
+   */
+  saveLocalData({
+    data,
+  }: MinigameTypes[MinigameOpcodes.SAVE_LOCAL_DATA]): void {
+    if (!this.minigameReady)
+      throw new Error("Cannot save local data before readying the minigame");
+    if (getSize(data) > 1024) throw new Error("Exceeds 1KB limit");
+    if (!this.db) throw new Error("Cannot find database");
+
+    if (typeof data !== "string" && !(data instanceof Uint8Array)) {
+      throw new Error(
+        "You can only set your local data as a string or UInt8Array",
+      );
+    }
+
+    this.data.data = data;
+    this.db.set(this.minigameId, data);
+  }
+  /**
    * Set the game state (host-only).
    * @param payload The state to set
    */
@@ -518,7 +544,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   ) {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_SEND_BINARY_GAME_MESSAGE,
-      data: payload,
+      data: payload.message,
     });
   }
   /**
@@ -530,7 +556,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   ) {
     this.ws?.send({
       opcode: ClientOpcodes.MINIGAME_SEND_BINARY_PLAYER_MESSAGE,
-      data: payload,
+      data: payload.message,
     });
   }
   /**

@@ -144,6 +144,25 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.END_GAME, {});
   }
   /**
+   * Save local data store for the minigame
+   */
+  saveLocalData(payload: MinigameTypes[MinigameOpcodes.SAVE_LOCAL_DATA]): void {
+    if (
+      typeof payload.data !== "string" &&
+      !(payload.data instanceof Uint8Array)
+    ) {
+      throw new Error(
+        "You can only set your local data as a string or UInt8Array",
+      );
+    }
+    if (!this.data) {
+      throw new Error("Cannot save local data before readying the minigame");
+    }
+
+    this.data.data = payload.data;
+    this.postMessage(MinigameOpcodes.SAVE_LOCAL_DATA, payload);
+  }
+  /**
    * Set the game state (host-only).
    * @param payload The state to set
    */

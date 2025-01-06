@@ -20,6 +20,7 @@ export interface BaseMinigameSdk {
 
   ready(): void;
   endGame(): void;
+  saveLocalData(payload: MinigameTypes[MinigameOpcodes.SAVE_LOCAL_DATA]): void;
   setGameState(payload: MinigameTypes[MinigameOpcodes.SET_GAME_STATE]): void;
   setPlayerState(
     payload: MinigameTypes[MinigameOpcodes.SET_PLAYER_STATE],

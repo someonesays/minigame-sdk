@@ -11,6 +11,7 @@ export interface ParentTypes {
     settings: GameSettings;
     user: number;
     room: GameRoom;
+    data: string | Uint8Array | null;
     players: MinigamePlayer[];
   };
   [ParentOpcodes.UPDATE_SETTINGS]: { settings: Partial<GameSettings> };
