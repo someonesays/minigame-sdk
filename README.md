@@ -37,28 +37,34 @@ const minigame = await sdk.ready();
 // End the game (host-only)
 sdk.endGame();
 
-// Set the game state (host-only)
+// Save local data store for the minigame as a string (1KB limit)
+sdk.saveLocalData({ data: "string" });
+
+// Advanced: Save local data store for the minigame as an UInt8Array (1KB limit)
+sdk.saveLocalData({ data: new UInt8Array([123]) });
+
+// Set the game state (host-only, 1MB limit)
 sdk.setGameState({ state });
 
-// Set the player state (host-only)
+// Set the player state (host-only, 1MB limit)
 sdk.setPlayerState({ user, state });
 
-// Send a game message (host-only, sends it to everyone)
+// Send a game message (host-only, sends it to everyone, 1MB limit)
 sdk.sendGameMessage({ message });
 
-// Send a player message (sends it to everyone)
+// Send a player message (sends it to everyone, 1MB limit)
 sdk.sendPlayerMessage({ message });
 
-// Send a private message (user defaults to host, only the host can send messages to other players other than the host)
+// Send a private message (user defaults to host, only the host can send messages to other players other than the host, 1MB limit)
 sdk.sendPrivateMessage({ user, message });
 
-// Advanced: Send a binary game message (host-only, sends it to everyone)
+// Advanced: Send a binary game message (host-only, sends it to everyone, 1MB limit)
 sdk.sendBinaryGameMessage(new Uint8Array([1, 2, 3]));
 
-// Advanced: Send a binary player message (sends it to everyone)
+// Advanced: Send a binary player message (sends it to everyone, 1MB limit)
 sdk.sendBinaryPlayerMessage(new Uint8Array([1, 2, 3]));
 
-// Advanced: Send a binry private message (user defaults to host, only the host can send messages to other players other than the host)
+// Advanced: Send a binary private message (user defaults to host, only the host can send messages to other players other than the host, 1MB limit)
 sdk.sendBinaryPrivateMessage({ user, message: new Uint8Array([1, 2, 3]) });
 
 // Here are the events

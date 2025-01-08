@@ -17,6 +17,7 @@ import type { ApiErrorResponse, ServerTypes } from "../../";
 import { generateCode } from "../../private/utils/generateCode";
 
 export class TestingMinigameSdk implements BaseMinigameSdk {
+  /** The minigame data */
   data?: ParentTypes[ParentOpcodes.READY];
 
   private isWaiting = false;
@@ -403,7 +404,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   }
 
   /**
-   * Add a listener to recieve events from the parent.
+   * Add a listener to recieve events from the parent
    * @param evt The parent type to listen to
    * @param listener The listener
    * @returns The event emitter
@@ -415,7 +416,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     return this.emitter.on(evt, listener);
   }
   /**
-   * Add a one-time listener to recieve events from the parent.
+   * Add a one-time listener to recieve events from the parent
    * @param evt The parent type to listen to
    * @param listener The listener
    * @returns The event emitter
@@ -427,7 +428,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     return this.emitter.once(evt, listener);
   }
   /**
-   * Disable a listener from recieve events.
+   * Disable a listener from recieve events
    * @param evt The parent type to listen to
    * @param listener The listener
    * @returns The event emitter
@@ -440,7 +441,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
   }
 
   /**
-   * Sends a handshake to the parent to start listening to events.
+   * Sends a handshake to the parent to start listening to events
    * @returns The ready payload
    */
   ready() {
@@ -460,7 +461,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Save local data store for the minigame
+   * Save local data store for the minigame (1KB limit)
    */
   saveLocalData({
     data,
@@ -480,7 +481,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     this.db.set(this.minigameId, data);
   }
   /**
-   * Set the game state (host-only).
+   * Set the game state (host-only, 1MB limit)
    * @param payload The state to set
    */
   setGameState({ state }: MinigameTypes[MinigameOpcodes.SET_GAME_STATE]) {
@@ -490,7 +491,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Set a player state (host-only).
+   * Set a player state (host-only, 1MB limit)
    * @param payload The state to set
    */
   setPlayerState(payload: MinigameTypes[MinigameOpcodes.SET_PLAYER_STATE]) {
@@ -500,7 +501,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Send a game message (host-only).
+   * Send a game message (host-only, 1MB limit)
    * @param payload The message to send
    */
   sendGameMessage(payload: MinigameTypes[MinigameOpcodes.SEND_GAME_MESSAGE]) {
@@ -510,7 +511,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Send a player message (host-only).
+   * Send a player message (host-only, 1MB limit).
    * @param payload The message to send
    */
   sendPlayerMessage({
@@ -522,7 +523,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Send a private message to a player.
+   * Send a private message to a player (1MB limit)
    *
    * Anyone can send messages to the host but only the host can send messages to other players.
    * @param payload The message to send
@@ -536,7 +537,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Send a binary game message (host-only).
+   * Send a binary game message (host-only, 1MB limit)
    * @param payload The message to send
    */
   sendBinaryGameMessage(
@@ -548,7 +549,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Send a player message.
+   * Send a player message (1MB limit)
    * @param payload The message to send
    */
   sendBinaryPlayerMessage(
@@ -560,7 +561,7 @@ export class TestingMinigameSdk implements BaseMinigameSdk {
     });
   }
   /**
-   * Send a private message to a player.
+   * Send a private message to a player (1MB limit)
    *
    * Anyone can send messages to the host but only the host can send messages to other players.
    * @param payload The message to send

@@ -3,7 +3,8 @@ import { BaseMinigameSdk, ParentOpcodes, MinigameOpcodes } from "../..";
 import type { ParentTypes, MinigameTypes } from "../..";
 
 export class MinigameSdk implements BaseMinigameSdk {
-  public data?: ParentTypes[ParentOpcodes.READY];
+  /** The minigame data */
+  data?: ParentTypes[ParentOpcodes.READY];
 
   private isWaiting = false;
   private isDestroyed = false;
@@ -89,7 +90,7 @@ export class MinigameSdk implements BaseMinigameSdk {
   }
 
   /**
-   * Add a listener to recieve events from the parent.
+   * Add a listener to recieve events from the parent
    * @param evt The parent type to listen to
    * @param listener The listener
    * @returns The event emitter
@@ -101,7 +102,7 @@ export class MinigameSdk implements BaseMinigameSdk {
     return this.emitter.on(evt, listener);
   }
   /**
-   * Add a one-time listener to recieve events from the parent.
+   * Add a one-time listener to recieve events from the parent
    * @param evt The parent type to listen to
    * @param listener The listener
    * @returns The event emitter
@@ -113,7 +114,7 @@ export class MinigameSdk implements BaseMinigameSdk {
     return this.emitter.once(evt, listener);
   }
   /**
-   * Disable a listener from recieve events.
+   * Disable a listener from recieve events
    * @param evt The parent type to listen to
    * @param listener The listener
    * @returns The event emitter
@@ -126,7 +127,7 @@ export class MinigameSdk implements BaseMinigameSdk {
   }
 
   /**
-   * Sends a handshake to the parent to start listening to events.
+   * Sends a handshake to the parent to start listening to events
    * @returns The ready payload
    */
   ready() {
@@ -144,7 +145,7 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.END_GAME, {});
   }
   /**
-   * Save local data store for the minigame
+   * Save local data store for the minigame (1KB limit)
    */
   saveLocalData(payload: MinigameTypes[MinigameOpcodes.SAVE_LOCAL_DATA]): void {
     if (
@@ -163,28 +164,28 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.SAVE_LOCAL_DATA, payload);
   }
   /**
-   * Set the game state (host-only).
+   * Set the game state (host-only, 1MB limit)
    * @param payload The state to set
    */
   setGameState(payload: MinigameTypes[MinigameOpcodes.SET_GAME_STATE]) {
     this.postMessage(MinigameOpcodes.SET_GAME_STATE, payload);
   }
   /**
-   * Set a player state (host-only).
+   * Set a player state (host-only, 1MB limit)
    * @param payload The state to set
    */
   setPlayerState(payload: MinigameTypes[MinigameOpcodes.SET_PLAYER_STATE]) {
     this.postMessage(MinigameOpcodes.SET_PLAYER_STATE, payload);
   }
   /**
-   * Send a game message (host-only).
+   * Send a game message (host-only, 1MB limit)
    * @param payload The message to send
    */
   sendGameMessage(payload: MinigameTypes[MinigameOpcodes.SEND_GAME_MESSAGE]) {
     this.postMessage(MinigameOpcodes.SEND_GAME_MESSAGE, payload);
   }
   /**
-   * Send a player message.
+   * Send a player message (1MB limit)
    * @param payload The message to send
    */
   sendPlayerMessage(
@@ -193,7 +194,7 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.SEND_PLAYER_MESSAGE, payload);
   }
   /**
-   * Send a private message to a player.
+   * Send a private message to a player (1MB limit)
    *
    * Anyone can send messages to the host but only the host can send messages to other players.
    * @param payload The message to send
@@ -204,7 +205,7 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.SEND_PRIVATE_MESSAGE, payload);
   }
   /**
-   * Send a binary game message (host-only).
+   * Send a binary game message (host-only, 1MB limit)
    * @param payload The message to send
    */
   sendBinaryGameMessage(
@@ -213,7 +214,7 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.SEND_BINARY_GAME_MESSAGE, payload);
   }
   /**
-   * Send a player message.
+   * Send a player message (1MB limit)
    * @param payload The message to send
    */
   sendBinaryPlayerMessage(
@@ -222,7 +223,7 @@ export class MinigameSdk implements BaseMinigameSdk {
     this.postMessage(MinigameOpcodes.SEND_BINARY_PLAYER_MESSAGE, payload);
   }
   /**
-   * Send a private message to a player.
+   * Send a private message to a player (1MB limit)
    *
    * Anyone can send messages to the host but only the host can send messages to other players.
    * @param payload The message to send
