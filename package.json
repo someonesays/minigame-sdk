@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/someonesays/minigame-sdk/issues"
   },
-  "files": ["/dist", "package.json"],
+  "files": ["/dist", "package.json", "LICENSE"],
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@changesets/cli": "^2.27.11",
